@@ -1,7 +1,7 @@
-FROM node:23-alpine
+FROM node:18-alpine
 WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
 COPY . .
-RUN cat .env
-RUN npm install --production
 EXPOSE 5010
 CMD ["node", "server.js"]
