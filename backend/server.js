@@ -17,7 +17,7 @@ import protectedRoutes from './routes/protectedRoutes.js';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5010;
 
 app.use(cookieParser());
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
