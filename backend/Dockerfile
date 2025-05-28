@@ -4,4 +4,4 @@ COPY . .
 RUN cat .env
 RUN npm install --production
 EXPOSE 5010
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]

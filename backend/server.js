@@ -34,10 +34,10 @@ app.use('/api', protectedRoutes);
 
 (async () => {
   try {
-    await db.sync();
+    await sequelize.sync();
     console.log("Database synced!");
 
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       console.log(`Server running on port ${port}`);
     });
   } catch (error) {
