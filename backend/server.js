@@ -20,7 +20,7 @@ const app = express();
 const port = process.env.PORT || 5010;
 
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'https://buku-tukar-559917148272.us-central1.run.app', credentials: true }));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
