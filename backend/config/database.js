@@ -1,30 +1,18 @@
-// import { Storage } from '@google-cloud/storage';
-// import path from 'path';
-// import { fileURLToPath } from 'url';
+import { Sequelize } from "sequelize";
+import dotenv from "dotenv"; //untuk menyembunyikan data berharga
 
-// const __filename = fileURLToPath(import.meta.url);
-// const _dirname = path.dirname(_filename);
+dotenv.config();//ngekonfigurasi data dari file.env
 
-// const projectId = 'xenon-axe-450704-n3';
-// const keyFilename = path.join(__dirname, './xenon-axe-450704-n3-b08c27baaa39.json'); 
-// const bucketName = 'simpan_buku_tukar'; 
-// const storage = new Storage({
-//   projectId,
-//   keyFilename,
-// });
+//Bikin variabel yg nerima data yg dirahasiakan
+const DB_NAME = process.env.DB_NAME;
+const DB_USERNAME = process.env.DB_USERNAME;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_HOST = process.env.DB_HOST;
 
-// const bucket = storage.bucket(bucketName);
-
-// export { storage, bucket };
-
-
-import { Storage } from '@google-cloud/storage';
-
-const bucketName = 'simpan_buku_tukar'; 
-const storage = new Storage({
-  projectId: 'xenon-axe-450704-n3', 
+// Nyambungin db ke BE
+const db = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
+  host:DB_HOST,
+  dialect: "mysql",
 });
 
-const bucket = storage.bucket(bucketName);
-
-export { storage, bucket };
+export default db;
