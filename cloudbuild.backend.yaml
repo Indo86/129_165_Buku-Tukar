@@ -1,14 +1,19 @@
 steps:
-  # Build Docker image
+  # 0.
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '${_ENV}', '.env']
+    dir: 'backend'
+
+  # 1. Build Docker image untuk backend
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}', '.']
     dir: 'backend'
 
-  # Push image ke Container Registry
+  # 2. Push ke Container Registry / Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}']
 
-  # Deploy ke Cloud Run
+  # 3. Deploy ke Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: gcloud
     args:
@@ -24,8 +29,9 @@ steps:
         '5000',
         '--region',
         'us-central1',
-        '--allow-unauthenticated'
+        '--allow-unauthenticated',
       ]
 
+# Log hanya akan disimpan di Google Cloud Logging
 options:
   logging: CLOUD_LOGGING_ONLY
