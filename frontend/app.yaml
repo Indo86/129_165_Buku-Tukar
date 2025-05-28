@@ -1,15 +1,15 @@
 runtime: nodejs22
-service: frontend-buku-tukar # ganti nama service kalau mau
+service: frontend-buku-tukar
 instance_class: F1
 
 handlers:
-  - url: /static
-    static_dir: build/static
+  - url: /assets
+    static_dir: dist/assets
 
   - url: /(.*\.(js|css|map|json|png|jpg|jpeg|gif|ico|svg|webp))
-    static_files: build/\1
-    upload: build/.*\.(js|css|map|json|png|jpg|jpeg|gif|ico|svg|webp)
+    static_files: dist/\1
+    upload: dist/.*\.(js|css|map|json|png|jpg|jpeg|gif|ico|svg|webp)
 
   - url: /.*
-    static_files: build/index.html
-    upload: build/index.html
+    static_files: dist/index.html
+    upload: dist/index.html
