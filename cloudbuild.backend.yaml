@@ -19,13 +19,13 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/book-exchange-backend:latest']
 
-  # Step 4: Deploy to Cloud Run
+  # Step 4: Deploy to Cloud Run (simplified first)
   - name: 'gcr.io/cloud-builders/gcloud'
     args:
       [
         'run',
         'deploy',
-        'book-exchange-backend',
+        'buku-tukar',
         '--image',
         'gcr.io/$PROJECT_ID/book-exchange-backend:$COMMIT_SHA',
         '--region',
@@ -36,15 +36,16 @@ steps:
         '--port',
         '5010',
         '--memory',
-        '512Mi',
+        '1Gi',
         '--cpu',
         '1',
         '--max-instances',
         '10',
+        '--timeout',
+        '300',
         '--set-env-vars',
-        'NODE_ENV=production',
-        '--set-secrets',
-        '/secrets/env=backend-env-secrets:latest',
+        'NODE_ENV=production,PORT=5010',
+        '--quiet',
       ]
 
 # Optional: Specify timeout and machine type
@@ -57,7 +58,9 @@ images:
   - 'gcr.io/$PROJECT_ID/book-exchange-backend:$COMMIT_SHA'
   - 'gcr.io/$PROJECT_ID/book-exchange-backend:latest'
 
-# Substitutions (optional - you can override these)
+# Substitutions (replace with your actual values)
 substitutions:
   _REGION: 'us-central1'
   _SERVICE_NAME: 'book-exchange-backend'
+  _CLOUD_SQL_INSTANCE: 'your-project:us-central1:your-instance-name'
+  _SERVICE_ACCOUNT: 'cloud-run-sql-service-account'
