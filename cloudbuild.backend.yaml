@@ -1,63 +1,37 @@
-# cloudbuild.yaml
-
 steps:
-  # Step 1: Copy environment file from Google Cloud Storage
+  # 0.
   - name: 'gcr.io/cloud-builders/gsutil'
     args: ['cp', '${_ENV}', '.env']
+    dir: 'backend'
 
-  # Step 2: Build Docker image
+  # 1. Build Docker image untuk backend
   - name: 'gcr.io/cloud-builders/docker'
-    args:
-      [
-        'build',
-        '-t',
-        'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}',
-        '-t',
-        'gcr.io/$PROJECT_ID/buku-tukar:latest',
-        '.',
-      ]
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}', '.']
+    dir: 'backend'
 
-  # Step 3: Push the Docker image to Container Registry
+  # 2. Push ke Container Registry / Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}']
 
-  # Step 4: Push the latest tag
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/buku-tukar:latest']
-
-  # Step 5: Deploy to Cloud Run (uses default smallest instance size)
+  # 3. Deploy ke Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: gcloud
-    args: [
+    args:
+      [
         'run',
         'deploy',
         'buku-tukar',
         '--image',
         'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}',
-        '--region',
-        'us-central1',
-        '--platform',
-        'managed',
-        '--allow-unauthenticated',
+        '--timeout',
+        '1000s',
         '--port',
         '5010',
-        # default memory (256Mi) & CPU (1 vCPU) are used when flags are omitted
-        '--timeout',
-        '300s',
-        '--set-env-vars',
-        'NODE_ENV=production,PORT=5010',
+        '--region',
+        'us-central1',
+        '--allow-unauthenticated',
       ]
 
-# Specify timeout and only cloud logging
-timeout: '1200s'
+# Log hanya akan disimpan di Google Cloud Logging
 options:
-  # switch to the smallest machine type for Cloud Build
-  machineType: 'E2_SMALL'
   logging: CLOUD_LOGGING_ONLY
-
-images:
-  - 'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}'
-  - 'gcr.io/$PROJECT_ID/buku-tukar:latest'
-
-substitutions:
-  _ENV: 'gs://simpan_buku_tukar/.env'
