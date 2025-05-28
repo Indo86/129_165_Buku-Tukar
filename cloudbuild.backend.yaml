@@ -16,22 +16,20 @@ steps:
   # 3. Deploy ke Cloud Run
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: gcloud
-    args:
-      [
+    args: [
         'run',
         'deploy',
         'buku-tukar',
         '--image',
         'gcr.io/$PROJECT_ID/buku-tukar:${SHORT_SHA}',
         '--timeout',
-        '1000s',
-        '--port',
-        '5010',
+        '300s',
+        # Remove this line:
+        # '--port', '5010',
         '--region',
         'us-central1',
         '--allow-unauthenticated',
       ]
 
-# Log hanya akan disimpan di Google Cloud Logging
 options:
   logging: CLOUD_LOGGING_ONLY
