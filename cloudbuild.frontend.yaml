@@ -22,7 +22,7 @@ steps:
     args:
       - -c
       - |
-        npm run build
+        npm run dev
     dir: 'frontend'
     volumes:
       - name: 'npm-cache'
